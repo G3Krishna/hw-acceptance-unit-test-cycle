@@ -70,7 +70,17 @@ RSpec.describe MoviesController, type: :controller do
             expect(response).to redirect_to "/movies/1"
         end
     end
-
+    
+    describe "show selected movie" do
+        it "should find movie with selected id"  do
+            Movie.create(id: 1, title: "TestTitle", rating: "TestRating", description: "TestDesc", release_date: "1900")
+            id_params = {id: 1}
+            get :show, id_params
+            expect(assigns(:movie)).to eq Movie.find(1)
+        end
+    end
+    
+    
 
 
 end
