@@ -1,7 +1,7 @@
 class MoviesController < ApplicationController
 
   def movie_params
-    params.require(:movie).permit(:title, :rating, :description, :release_date)
+    params.require(:movie).permit(:title, :rating, :director,:description, :release_date)
   end
 
   def show
@@ -36,7 +36,21 @@ class MoviesController < ApplicationController
   def new
     # default: render 'new' template
   end
-
+  
+  def similar_directors
+    if(!params[:director].blank?)
+      @similar_directors = Movie.get_similar_directors(params[:director])
+      if(@similar_directors.length == 1)
+        flash[:notice] = "'#{params[:title]}' has no director info"
+        redirect_to movies_path
+      else
+        return @similar_directors
+      end
+    else
+      flash[:notice] = "'#{params[:title]}' has no director info"
+      redirect_to movies_path
+    end
+  end
   def create
     @movie = Movie.create!(movie_params)
     flash[:notice] = "#{@movie.title} was successfully created."
